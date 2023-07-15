@@ -1,27 +1,62 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* globals.css */
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* Color variables */
+  --primary-color: #FF6B08; /* Bright Orange */
+  --secondary-color: #333333; /* Dark Gray */
+  --background-color: #f8f8f894; /* Light Gray */
+  --text-color: #FFFFFF; /* White */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/* Reset default styles */
+
+
+/* Global styles */
+html,
+body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: var(--background-color);
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--secondary-color);
+}
+
+.logo {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  margin-right: 1.5rem;
+}
+
+/* Content styles */
+.content {
+  padding: 2rem;
+}
+
+/* Footer styles */
+.footer {
+  padding: 1rem;
+  text-align: center;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
 }
