@@ -1,0 +1,42 @@
+Landing Page
+
+
+About 
+
+
+TrickTree
+    - Goals: 
+        - scrollable interactive tree that is a map of tricks 
+        - Tricks that build of other tricks are connected each trick is a circular node
+        - By clicking on the node, user can enter that trick page 
+        - Multiple Trees for different things. Kickflip tree, Basics tree, heelflip tree, ledge tree, etc 
+
+https://www.surfertoday.com/skateboarding/the-ultimate-list-of-skateboard-tricks 
+
+                
+
+
+Trick Page
+    - Goals: 
+        - Each trick has its own trick page /tricktree/[trickname]
+        - this page has a trick description 
+        - Each trick has common tips for learning and landing 
+        - Links to tutorials
+        - videos of professionals doing the trick
+        - Journal section, upload videos of you landing the trick
+        - other public users videos for each trick are viewable 
+
+Spot Map
+    - Goals:
+        - Google Map API users can search map and drag to look around/zoom
+        - can see pins dropped from others of spot locations
+        - each spot location needs to have a title and description can also contain images and videos as well as reviews
+        - users can drop a pin on the map to create a new skate spot 
+
+Explore 
+    - Goals: 
+        - Users can scroll through a feed containing videos from those they follow
+        - Can see recent videos posted as well as progression on tricks for others
+        - Can explore new public profiles and peoples tricks
+
+Profile/Signin/signup
