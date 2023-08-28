@@ -15,7 +15,11 @@ export default function RootLayout({ children }: { children: React.ReactNode}) {
         <ClerkProvider>
             <html lang="en">
                 <body>
-                {children}
+                    <section className='main-container'>
+                        <div className='w-full max-w-4xl'>
+                            {children}
+                        </div>
+                    </section>
                 </body>
             </html>
         </ClerkProvider>

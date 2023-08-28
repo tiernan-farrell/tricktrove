@@ -28,7 +28,8 @@ const nextConfig = {
           hostname: "placehold.co",
         },
       ],
-    },
+    }, 
+
   };
 
 module.exports = nextConfig
