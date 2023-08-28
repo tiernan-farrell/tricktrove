@@ -30,3 +30,31 @@ export async function CreateClip({video, caption, author, communityId, path}: Cl
     
     revalidatePath(path);
 }
+
+export async function fetchClips(pageNumber = 1, pageSize = 20) { 
+    connectToDB();
+
+    const skipAmt = (pageNumber-1)  * pageSize;
+    // Fetch Top Level Clips 
+    const clipsQuery = Clip.find({parentId:  { $in: [null, undefined]}})
+    .sort({createdAt: 'desc'})
+    .skip(skipAmt)
+    .limit(pageSize)
+    .populate({ path: 'author', model: User})
+    .populate({
+        path: 'children',
+        populate: {
+            path: 'author',
+            model: User,
+            select: "_id name parentId image"
+        }
+    })    
+
+    const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
+
+    const clips = await clipsQuery.exec();
+
+    const isNext = clipsCount > skipAmt+ clips.length;
+
+    return { clips, isNext }
+}

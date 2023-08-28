@@ -7,10 +7,3 @@ export const { GET, POST } = createNextRouteHandler({
   router: ourFileRouter,
 });
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '32mb',
-    },
-  },
-}

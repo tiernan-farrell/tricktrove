@@ -9,9 +9,9 @@ const getUser = async () => await currentUser();
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  media: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+  media: f({ image: { maxFileSize: "4MB" } })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
       const user = await getUser();
  
@@ -27,7 +27,7 @@ export const ourFileRouter = {
  
       console.log("file url", file.url);
     }),
-    videoUploader: f({ video: { maxFileSize: "32MB", maxFileCount: 1 } })
+    videoUploader: f({ video: { maxFileSize: "1GB" } })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       // This code runs on your server before upload
@@ -48,11 +48,3 @@ export const ourFileRouter = {
 } satisfies FileRouter;
  
 export type OurFileRouter = typeof ourFileRouter;
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '1mb',
-    },
-  },
-}
