@@ -9,8 +9,6 @@ export default async function Home() {
   console.log(result);
   return (
     <>
-      
-      <h1 className="head-text text-left text-light-2">Home</h1>
 
       <section className="mt-9 flex flex-col gap-10">
         {result.clips.length === 0 ? (

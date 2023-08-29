@@ -42,6 +42,8 @@ const ClipCard = ({
     comments,
     isComment, 
     }: ClipCardProps) => {
+        const blob = new Blob([content], { type: 'video/quicktime' });
+        const videoUrl = URL.createObjectURL(blob);
         return (
             <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7">
                 <div className="flex items-start justify-between">
@@ -63,7 +65,10 @@ const ClipCard = ({
                             <h4 className="cursor-pointer text-base-semibold text-light-1">{author.name}</h4>
                         </Link>
                         {/* TODO: Implement video display here */}
-                        <video src={content} />
+                        <video controls autoPlay src={videoUrl}>
+                            <source src={videoUrl} type="video/quicktime" />
+                            Your browser does not support the video tag.
+                        </video>
                         <p className="mt-2 text-small-regular text-light-2">{caption}</p>
 
                         <div className="mt-5 flex flex-col gap-3">

@@ -14,8 +14,9 @@ async function Page() {
     return (
         <>
 
-
-            <UploadClip userId={userInfo._id} btnTitle="Upload Clip" />
+            <div className="px-24">
+                <UploadClip userId={userInfo._id} btnTitle="Upload Clip" />
+            </div>
 
         </>
     )
