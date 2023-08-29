@@ -13,6 +13,13 @@ interface ClipProps {
     path: string,
 }
 
+interface AddCommentProps { 
+    clipId: string,
+    commentText: string,
+    userId: string,
+    path: string,
+    videoUrl: string,
+}
 
 export async function CreateClip({video, caption, author, communityId, path}: ClipProps) {
     connectToDB();
@@ -57,4 +64,72 @@ export async function fetchClips(pageNumber = 1, pageSize = 20) {
     const isNext = clipsCount > skipAmt+ clips.length;
 
     return { clips, isNext }
+}
+
+export async function fetchClipById(id: string) {
+    connectToDB();
+    
+    try { 
+        const clip = await Clip.findById(id)
+        .populate({
+            path: 'author',
+            model: User, 
+            select: "_id id name image"
+        })
+        .populate({
+            path: 'children',
+            populate: [
+                {
+                    path: 'author',
+                    model: User, 
+                    select: "_id id name parentId image"
+                }, 
+                {
+                    path: 'children',
+                    model: Clip,
+                    select: "_id id name parentId image"
+                }
+            ]
+        }).exec();
+
+        return clip;
+    }catch (err: any) { 
+        console.log(err);
+        throw new Error(`Error fetching thread: ${err.message}`);
+    }
+}
+
+export async function addCommentToClip(
+    {
+        clipId,
+        commentText,
+        userId, 
+        path,
+        videoUrl
+    }: AddCommentProps) { 
+        connectToDB();
+
+        try {
+
+            // find original clip by id
+            const originalClip = await Clip.findById(clipId);
+
+            if (!originalClip) throw new Error("Clip not found");
+
+            const commentClip = new Clip({
+                video: videoUrl,
+                caption: commentText,
+                author: userId.substring(1, userId.length-1)
+            
+            })
+            const savedCommentClip = await commentClip.save();
+
+            originalClip.children.push(savedCommentClip._id);
+
+            await originalClip.save();
+
+            revalidatePath(path);
+        } catch(err: any) { 
+            throw new Error(`Error Adding Comment to Clip ${err.message}`);
+        }
 }
