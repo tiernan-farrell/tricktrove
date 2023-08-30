@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
 import ReactPlayer from 'react-player'
-import { createDeflate } from "zlib";
-
 
 
 interface ClipCardProps { 
@@ -47,7 +45,7 @@ const ClipCard = ({
     comments,
     isComment, 
     }: ClipCardProps) => {
-        console.log(`Created at ${createdAt}`)
+        console.log(`Created at ${content}`)
         const blob = new Blob([content], { type: 'video/quicktime' });
         const videoUrl = URL.createObjectURL(blob);
 
@@ -90,11 +88,10 @@ const ClipCard = ({
                             <h4 className="cursor-pointer text-base-semibold text-light-1">{author.name}</h4>
                         </Link>
                         {/* TODO: Implement video display here */}
-                        <video controls autoPlay src={videoUrl}>
-                            <source src={videoUrl} type="video/quicktime" />
-                            Your browser does not support the video tag.
-                        </video>
-
+                        <div className="video-player">
+                            <video controls src={content}/>
+                        </div>
+                        {/* <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' /> */}
                         <p className="mt-2 text-small-regular text-light-2">{date}</p>
                         <p className="mt-2 text-small-regular text-light-2">{caption}</p>
 

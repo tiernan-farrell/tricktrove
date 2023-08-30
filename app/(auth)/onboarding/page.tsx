@@ -6,15 +6,22 @@ async function Page() {
 
     const user = await currentUser();
 
-    const userInfo ={}
+    const userInfo ={
+        id: '',
+        objectId: '',
+        username: '',
+        name: '',
+        bio: '',
+        image: ''
+    }
 
     const userData = {
         id: user?.id,
-        objectId: userInfo?._id,
+        objectId: userInfo?.id,
         username: userInfo?.username || user?.username || "",
-        name: userInfo?.name || user?.name || "",
+        name: userInfo?.name || "",
         bio: userInfo?.bio || "",
-        image: userInfo?.image || userInfo?.imageURL,
+        image: userInfo?.image,
     }
 
     return (

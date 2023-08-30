@@ -39,7 +39,7 @@ interface CommentProps {
 
 const Comment =  ({clipId, currentUserImg, currentUserId}: CommentProps) => { 
     const [files, setFiles] = useState<File[]>([]);
-    const { startUpload } = useUploadThing("videoUploader");
+    const { startUpload } = useUploadThing("mediaPost");
     const router = useRouter();
     const pathname  = usePathname();
     

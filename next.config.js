@@ -5,6 +5,7 @@ const nextConfig = {
   },
     experimental: {
       serverActions: true,
+      serverActionsBodySizeLimit: '1gb',
       serverComponentsExternalPackages: ["mongoose"],
     },
     eslint: {

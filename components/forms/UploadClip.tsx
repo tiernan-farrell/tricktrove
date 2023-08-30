@@ -24,7 +24,7 @@ import { isBase64Image } from "@/lib/utils";
 // import { updateUser } from "@/lib/actions/user.actions";
 import { ClipValidation } from "@/lib/validations/clip";
 import { CreateClip } from "@/lib/actions/clip.actions";
-import { getRandomValues } from "crypto";
+
 
 interface UploadClipProps { 
     userId: string, 
@@ -33,7 +33,7 @@ interface UploadClipProps {
 
 const UploadClip = ({userId, btnTitle}: UploadClipProps) => { 
     const [files, setFiles] = useState<File[]>([]);
-    const { startUpload } = useUploadThing("videoUploader");
+    const { startUpload } = useUploadThing("mediaPost");
     const router = useRouter();
     const pathname  = usePathname();
 

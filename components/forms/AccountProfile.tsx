@@ -41,7 +41,7 @@ interface AccountProfileProps {
 
 const AccountProfile = ( { user, btnTitle }: AccountProfileProps) => { 
     const [files, setFiles] = useState<File[]>([]);
-    const { startUpload } = useUploadThing("media");
+    const { startUpload } = useUploadThing("mediaPost");
     const router = useRouter();
     const pathname  = usePathname();
 
