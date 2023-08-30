@@ -11,7 +11,7 @@ async function Page() {
 
   const userInfo = await fetchUser(user.id);
   
-  if (!userInfo?.onboarded) ("/onboarding");
+  if (!userInfo?.onboarded) redirect("/onboarding");
 
   const activity = await getActivity(userInfo._id);
 
