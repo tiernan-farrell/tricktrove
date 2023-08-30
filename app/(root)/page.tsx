@@ -1,12 +1,18 @@
 import ClipCard from "@/components/cards/ClipCard";
 import { fetchClips } from "@/lib/actions/clip.actions";
+import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const user = await currentUser();
   const result = await fetchClips(1, 30);
 
-  console.log(`results: ${result}`);
+
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo?.onboarded) redirect("/onboarding");
   return (
     <>
 
