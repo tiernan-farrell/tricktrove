@@ -1,5 +1,6 @@
 
 
+import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
@@ -45,13 +46,15 @@ const ClipCard = ({
     comments,
     isComment, 
     }: ClipCardProps) => {
-        console.log(`Created at ${content}`)
+        // console.log(`Community: ${community}`);
+
+
         const blob = new Blob([content], { type: 'video/quicktime' });
         const videoUrl = URL.createObjectURL(blob);
 
         const dateString = JSON.stringify(createdAt);
         const inputDate = new Date(dateString.substring(1, dateString.length-1));
-        console.log(inputDate)
+
 
 
         const date = inputDate.toLocaleString("en-US", {
@@ -63,7 +66,7 @@ const ClipCard = ({
             timeZoneName: "short",
         })
 
-        console.log(date)
+
 
         
         return (
@@ -88,12 +91,30 @@ const ClipCard = ({
                             <h4 className="cursor-pointer text-base-semibold text-light-1">{author.name}</h4>
                         </Link>
                         {/* TODO: Implement video display here */}
+                        <p className="mt-2 text-small-regular text-light-2 p-4">{caption}</p>
                         <div className="video-player">
                             <video controls src={content}/>
                         </div>
                         {/* <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' /> */}
                         <p className="mt-2 text-small-regular text-light-2">{date}</p>
-                        <p className="mt-2 text-small-regular text-light-2">{caption}</p>
+                            {!isComment && community ? (
+                        <Link
+                        href={`/communities/${community.id}`}
+                        className='mt-5 flex items-center'
+                        >
+                        <p className='text-subtle-medium text-gray-1'>
+                            {date}
+                            {community && ` - ${community.name} Community`}
+                        </p>
+                        <Image
+                            src={community.image}
+                            alt={community.name}
+                            width={14}
+                            height={14}
+                            className='ml-1 rounded-full object-cover'
+                        />
+                        </Link>
+                        ): (<></>)}
 
                         <div className="mt-5 flex flex-col gap-3">
                             <div className="flex gap-3.5">
@@ -150,6 +171,8 @@ const ClipCard = ({
                             </div>
                             )}
                     </div>
+                                
+
                     </div>
             </article>
         )

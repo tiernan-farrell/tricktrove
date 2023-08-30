@@ -24,7 +24,6 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
-      console.log("file url", file.url);
     }),
  
   // This route takes an attached image OR video
@@ -43,7 +42,6 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
  
-      console.log("file url", file.url);
     }),
  
   // Takes ONE image up to 2MB
@@ -62,7 +60,6 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
  
-      console.log("file url", file.url);
     }),
 
  
@@ -85,7 +82,7 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
  
-      console.log("file url", file.url);
+
     }),
 
 } satisfies FileRouter;

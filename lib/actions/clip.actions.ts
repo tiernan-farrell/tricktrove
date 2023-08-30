@@ -79,7 +79,7 @@ export async function fetchClips(pageNumber = 1, pageSize = 20) {
         const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
         
         const clips = await clipsQuery.exec();
-        console.log(`Created at: ${clips[0].createdAt}`)
+
         
         const isNext = clipsCount > skipAmt+ clips.length;
         

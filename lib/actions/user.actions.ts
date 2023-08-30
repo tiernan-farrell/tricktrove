@@ -99,7 +99,7 @@ export async function fetchUserPosts(userId: string) {
                 },
                 ],
             }).sort({createdAt: -1})
-            console.log(clips)
+
         return clips;
     } catch(err: any) { 
         throw new Error(`Error while fetching users posts ${err.message}`);

@@ -24,6 +24,7 @@ import { isBase64Image } from "@/lib/utils";
 // import { updateUser } from "@/lib/actions/user.actions";
 import { ClipValidation } from "@/lib/validations/clip";
 import { CreateClip } from "@/lib/actions/clip.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 
 interface UploadClipProps { 
@@ -36,6 +37,7 @@ const UploadClip = ({userId, btnTitle}: UploadClipProps) => {
     const { startUpload } = useUploadThing("mediaPost");
     const router = useRouter();
     const pathname  = usePathname();
+    const { organization } = useOrganization();
 
 
     const form = useForm({
@@ -80,13 +82,16 @@ const UploadClip = ({userId, btnTitle}: UploadClipProps) => {
         if (vidRes && vidRes[0].fileUrl) { 
             values.video = vidRes[0].fileUrl;
         }
+
+        console.log(`Community  ${organization}`)
         await CreateClip({
-            video: values.video, 
-            caption: values.caption, 
-            author: userId,
-            communityId: null, 
-            path: pathname
+          video: values.video, 
+          caption: values.caption, 
+          author: userId,
+          communityId: organization ? organization.id : null, 
+          path: pathname
         })
+      
         router.push('/')
     }
 
