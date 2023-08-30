@@ -1,9 +1,9 @@
 export default function RightSidebar() {
     return (
-        <section className="custon-scrollbar rightsidebar">
+        <section className="rightsidebar">
             <div className="flex flex-1 flex-col justify-start">
                 <h3 className="text-heading4-medium text-light-1">Beginner</h3>
-                 <div className='mt-7 flex w-[350px] flex-col gap-9'>
+                 <div className='mt-7 flex w-48 flex-col gap-9'>
 
                 <ul>
                     <li className='!text-base-regular text-light-3'>Ollie</li>
@@ -20,7 +20,7 @@ export default function RightSidebar() {
 
             <div className="flex flex-1 flex-col justify-start">
                 <h3 className="text-heading4-medium text-light-1">Flip Tricks</h3>
-                 <div className='mt-7 flex w-[350px] flex-col gap-9'>
+                 <div className='mt-7 flex w-48 flex-col gap-9'>
 
                 <ul>
                     <li className='!text-base-regular text-light-3'>Kickflip</li>

@@ -2,7 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
+import Clip from "../models/clip.model"
 import { connectToDB } from "../mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
 
 interface UpdateUserProps { 
     userId: string, 
@@ -12,6 +14,15 @@ interface UpdateUserProps {
     image: string, 
     path: string
 }
+interface FetchUserProps { 
+    userId: string,
+    searchString?: string, 
+    pageNumber?: number, 
+    pageSize?: number, 
+    sortBy?: SortOrder
+
+}
+
 
 export async function updateUser({
     userId, 
@@ -29,9 +40,9 @@ export async function updateUser({
             { 
                 username: username.toLowerCase(),
                 name, 
-                bio, 
                 image, 
-                onboarded: true,
+                bio, 
+                onboarded: true
             },
             {upsert: true}
             
@@ -55,3 +66,109 @@ export async function fetchUser(userId: string) {
         throw new Error(`Failed to fetch user: ${err.message}`);
     }
 }
+
+export async function fetchUserPosts(userId: string) { 
+    try { 
+        connectToDB();
+        
+        // Find all clips with the auther of user for given userId
+        const clips = await User.findOne({ id: userId })
+            .populate({ 
+                path: 'clips',
+                model: Clip,
+                populate: { 
+                    path: 'children',
+                    model: Clip,
+                    populate: {
+                        path: 'author',
+                        model: User,
+                        select: 'name image id'
+                    }
+                }
+            }).sort({createdAt: -1})
+            console.log(clips)
+        return clips;
+    } catch(err: any) { 
+        throw new Error(`Error while fetching users posts ${err.message}`);
+    }
+
+
+}
+
+export async function fetchUsers({ 
+    userId, 
+    searchString = "",
+    pageNumber = 1,
+    pageSize = 20,
+    sortBy = -1
+}: FetchUserProps ) { 
+    try {
+        connectToDB();
+
+        const skipAmt = (pageNumber - 1) * pageSize;
+
+        const regex = new RegExp(searchString, "i");
+
+        const query: FilterQuery<typeof User> = { 
+            id: { $ne: userId }
+        }
+
+        if (searchString.trim() !== '') { 
+            query.$or = [
+                { username: { $regex: regex }},
+                { name: { $regex: regex }}
+            ]
+        }
+
+        const sortOptions = {createdAt: sortBy };
+
+
+        const userQuery = User.find(query)
+            .sort(sortOptions)
+            .skip(skipAmt)
+            .limit(pageSize)
+
+        const userCount = await User.countDocuments(query);
+
+        const users = await userQuery.exec();
+
+        const isNext = userCount > skipAmt + users.length;
+
+        return { users, isNext }
+
+
+    } catch (err: any) { 
+        throw new Error(`Error Fetching Users ${err.message}`);
+    }
+} 
+
+
+export async function getActivity(userId: string) {
+    try {
+      connectToDB();
+  
+      // Find all threads created by the user
+      const userClips = await Clip.find({ author: userId });
+  
+      // Collect all the child thread ids (replies) from the 'children' field of each user thread
+      const childThreadIds = userClips.reduce((acc, userClip) => {
+        return acc.concat(userClip.children);
+      }, []);
+  
+      // Find and return the child threads (replies) excluding the ones created by the same user
+      const replies = await Clip.find({
+        _id: { $in: childThreadIds },
+        author: { $ne: userId }, // Exclude threads authored by the same user
+      }).populate({
+        path: "author",
+        model: User,
+        select: "name image _id",
+      });
+  
+      return replies;
+    } catch (err: any) {
+      console.error("Error fetching replies: ", err);
+      throw new Error(`Error fetching Activity ${err.message}`);
+    }
+  }
+  

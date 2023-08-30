@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { profileTabs } from "@/constants";
+import ClipsTab from "@/components/shared/ClipsTab";
 
 async function Page({ params }: {params: {id: string}}) { 
 
@@ -42,6 +43,16 @@ async function Page({ params }: {params: {id: string}}) {
                        </TabsTrigger> 
                     ))}
                     </TabsList>
+                    {profileTabs.map((tab) => (
+                        <TabsContent key={`content-${tab.label}`} value={tab.value} className="w-full text-light-1">
+                            <ClipsTab
+                                currentUserId={user.id}
+                                accountId={userInfo.id}
+                                accountType="User"
+                            />
+                        </TabsContent>
+                    ))}
+
                 </Tabs>
 
             </div>

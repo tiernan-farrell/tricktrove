@@ -9,12 +9,15 @@ async function Page() {
     if (!user) return null;
 
     const userInfo = await fetchUser(user.id);
-    // if(!userInfo?.onbarded) redirect('/onboarding');
+    if(!userInfo?.onboarded) redirect('/onboarding');
 
     return (
         <>
 
             <div className="px-24">
+            <p className="text-small-medium text-light-1">
+                {userInfo.id}
+            </p>
                 <UploadClip userId={userInfo._id} btnTitle="Upload Clip" />
             </div>
 

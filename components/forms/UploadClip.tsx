@@ -43,7 +43,7 @@ const UploadClip = ({userId, btnTitle}: UploadClipProps) => {
         defaultValues: { 
             video: '',
             caption: '',
-            author: userId,
+            author: userId || "",
         }
     })
 
@@ -77,16 +77,17 @@ const UploadClip = ({userId, btnTitle}: UploadClipProps) => {
         const vidRes = await startUpload(files);
             
 
-            if (vidRes && vidRes[0].fileUrl) { 
-                values.video = vidRes[0].fileUrl;
-            }
-            await CreateClip({
-                video: values.video, 
-                caption: values.caption, 
-                author: userId,
-                communityId: null, 
-                path: pathname
-            })
+        if (vidRes && vidRes[0].fileUrl) { 
+            values.video = vidRes[0].fileUrl;
+        }
+        await CreateClip({
+            video: values.video, 
+            caption: values.caption, 
+            author: userId,
+            communityId: null, 
+            path: pathname
+        })
+        router.push('/')
     }
 
 

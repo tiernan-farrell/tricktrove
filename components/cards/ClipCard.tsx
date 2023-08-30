@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
 import ReactPlayer from 'react-player'
+import { createDeflate } from "zlib";
 
 
 
@@ -46,8 +47,27 @@ const ClipCard = ({
     comments,
     isComment, 
     }: ClipCardProps) => {
+        console.log(`Created at ${createdAt}`)
         const blob = new Blob([content], { type: 'video/quicktime' });
         const videoUrl = URL.createObjectURL(blob);
+
+        const dateString = JSON.stringify(createdAt);
+        const inputDate = new Date(dateString.substring(1, dateString.length-1));
+        console.log(inputDate)
+
+
+        const date = inputDate.toLocaleString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            timeZoneName: "short",
+        })
+
+        console.log(date)
+
+        
         return (
 
             <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7 mt-7">
@@ -75,6 +95,7 @@ const ClipCard = ({
                             Your browser does not support the video tag.
                         </video>
 
+                        <p className="mt-2 text-small-regular text-light-2">{date}</p>
                         <p className="mt-2 text-small-regular text-light-2">{caption}</p>
 
                         <div className="mt-5 flex flex-col gap-3">

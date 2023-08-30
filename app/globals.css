@@ -78,7 +78,7 @@
   }
 
   .leftsidebar {
-    @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
+    @apply fixed left-0 top-0 z-0 flex h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
   }
 
   .leftsidebar_link {
@@ -90,7 +90,7 @@
   }
 
   .rightsidebar {
-    @apply fixed w-48 right-0 top-0 z-0 flex h-screen flex-col justify-between gap-4 overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
+    @apply fixed w-fit right-0 top-0 z-0 flex  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
   }
 }
 
@@ -100,8 +100,8 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
+    width: 0px;
+    height: 0px;
     border-radius: 2px;
   }
 
@@ -110,7 +110,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #5c5c7b;
+    background: none;
     border-radius: 50px;
   }
 

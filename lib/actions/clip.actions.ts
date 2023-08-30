@@ -22,54 +22,67 @@ interface AddCommentProps {
 }
 
 export async function CreateClip({video, caption, author, communityId, path}: ClipProps) {
-    connectToDB();
+    try { 
 
-    const createdClip = await Clip.create({
-        video, 
-        caption, 
-        author, 
-        community: null,
-    });
-
-    await User.findByIdAndUpdate(author, {
-        $push: { clips: createdClip._id }
-    })
-    
-    revalidatePath(path);
+        connectToDB();
+        
+        const createdClip = await Clip.create({
+            video, 
+            caption, 
+            author, 
+            community: null,
+            createdAt: Date.now()
+        });
+        
+        await User.findByIdAndUpdate(author, {
+            $push: { clips: createdClip._id }
+        })
+        
+        revalidatePath(path);
+    } catch(err: any) { 
+        console.log(err.message);
+        throw new Error(`Error Uploading Clip: ${err.message}`);
+    }
 }
 
 export async function fetchClips(pageNumber = 1, pageSize = 20) { 
-    connectToDB();
 
-    const skipAmt = (pageNumber-1)  * pageSize;
-    // Fetch Top Level Clips 
-    const clipsQuery = Clip.find({parentId:  { $in: [null, undefined]}})
-    .sort({createdAt: 'desc'})
-    .skip(skipAmt)
-    .limit(pageSize)
-    .populate({ path: 'author', model: User})
-    .populate({
-        path: 'children',
-        populate: {
-            path: 'author',
-            model: User,
-            select: "_id name parentId image"
-        }
-    })    
+    try { 
 
-    const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
+        connectToDB();
 
-    const clips = await clipsQuery.exec();
-
-    const isNext = clipsCount > skipAmt+ clips.length;
-
-    return { clips, isNext }
+        const skipAmt = (pageNumber-1)  * pageSize;
+        // Fetch Top Level Clips 
+        const clipsQuery = Clip.find({parentId:  { $in: [null, undefined]}})
+        .sort({createdAt: -1})
+        .skip(skipAmt)
+        .limit(pageSize)
+        .populate({ path: 'author', model: User})
+        .populate({
+            path: 'children',
+            populate: {
+                path: 'author',
+                model: User,
+                select: "_id name parentId image"
+            }
+        })    
+        const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
+        
+        const clips = await clipsQuery.exec();
+        console.log(`Created at: ${clips[0].createdAt}`)
+        
+        const isNext = clipsCount > skipAmt+ clips.length;
+        
+        return { clips, isNext }
+    } catch(err: any) { 
+        throw new Error(`FetchClips ${err.message}`);
+    }
 }
 
 export async function fetchClipById(id: string) {
-    connectToDB();
     
     try { 
+        connectToDB();
         const clip = await Clip.findById(id)
         .populate({
             path: 'author',
@@ -119,7 +132,7 @@ export async function addCommentToClip(
             const commentClip = new Clip({
                 video: videoUrl,
                 caption: commentText,
-                author: userId.substring(1, userId.length-1)
+                author: userId
             
             })
             const savedCommentClip = await commentClip.save();

@@ -15,6 +15,11 @@ export const sidebarLinks = [
       label: "Upload Clip",
     },
     {
+      imgURL: "/assets/heart.svg",
+      route: "/activity",
+      label: "Activity",
+    },
+    {
       imgURL: "/assets/community.svg",
       route: "/communities",
       label: "Communities",
