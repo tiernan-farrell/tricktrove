@@ -1,7 +1,7 @@
 import ClipCard from "@/components/cards/ClipCard";
 import { fetchClips } from "@/lib/actions/clip.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
+import { UserButton, currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -13,6 +13,8 @@ export default async function Home() {
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
+
+  
   return (
     <>
 
