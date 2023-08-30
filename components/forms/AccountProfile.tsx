@@ -24,99 +24,93 @@ import { isBase64Image } from "@/lib/utils";
 
 import { UserValidation } from "@/lib/validations/user";
 import { updateUser } from "@/lib/actions/user.actions";
-// import { updateUser } from "@/lib/actions/user.actions";
 
-
-interface AccountProfileProps { 
-    user: {
-        id: string; 
-        objectId: string;
-        username: string;
-        name: string;
-        bio: string;
-        image: string;
-    }
-    btnTitle: string;
+interface Props {
+  user: {
+    id: string;
+    objectId: string;
+    username: string;
+    name: string;
+    bio: string;
+    image: string;
+  };
+  btnTitle: string;
 }
 
-const AccountProfile = ( { user, btnTitle }: AccountProfileProps) => { 
-    const [files, setFiles] = useState<File[]>([]);
-    const { startUpload } = useUploadThing("mediaPost");
-    const router = useRouter();
-    const pathname  = usePathname();
+const AccountProfile = ({ user, btnTitle }: Props) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { startUpload } = useUploadThing("media");
 
+  const [files, setFiles] = useState<File[]>([]);
 
-    const form = useForm({
-        resolver: zodResolver(UserValidation),
-        defaultValues: { 
-            profile_photo: user?.image || '',
-            name: user?.name || '',
-            username: user?.username || '',
-            bio: user?.bio || '',
-        }
-    })
+  const form = useForm<z.infer<typeof UserValidation>>({
+    resolver: zodResolver(UserValidation),
+    defaultValues: {
+      profile_photo: user?.image ? user.image : "",
+      name: user?.name ? user.name : "",
+      username: user?.username ? user.username : "",
+      bio: user?.bio ? user.bio : "",
+    },
+  });
 
+  const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    const blob = values.profile_photo;
 
-    const onSubmit = async(values: z.infer<typeof UserValidation>) => {
-        const blob = values.profile_photo;
+    const hasImageChanged = isBase64Image(blob);
+    if (hasImageChanged) {
+      const imgRes = await startUpload(files);
 
-        const imgChanged = isBase64Image(blob);
-
-        if (imgChanged) { 
-            const imgRes = await startUpload(files);
-            
-            if (imgRes && imgRes[0].fileUrl) { 
-                values.profile_photo = imgRes[0].fileUrl;
-            }
-        }
-
-        // Call backend function to update user profile
-        await updateUser(
-          {
-           userId: user.id, 
-           username: values.username,
-           name: values.name, 
-           bio: values.bio, 
-           image: values.profile_photo,
-           path: pathname
-        });
-
-        pathname === '/profile/edit' ? router.back() : router.push('/')
+      if (imgRes && imgRes[0].fileUrl) {
+        values.profile_photo = imgRes[0].fileUrl;
+      }
     }
 
-    const handleImage = (
-        e: ChangeEvent<HTMLInputElement>,
-        fieldChange: (value: string) => void
-    ) => {
-        e.preventDefault();
+    await updateUser({
+      name: values.name,
+      path: pathname,
+      username: values.username,
+      userId: user.id,
+      bio: values.bio,
+      image: values.profile_photo,
+    });
 
-        const fileReader = new FileReader();
-    
-        if (e.target.files && e.target.files.length > 0) {
-          const file = e.target.files[0];
-          setFiles(Array.from(e.target.files));
-    
-          if (!file.type.includes("image")) return;
-    
-          fileReader.onload = async (event) => {
-            const imageDataUrl = event.target?.result?.toString() || "";
-            fieldChange(imageDataUrl);
-          };
-    
-          fileReader.readAsDataURL(file);
-        }
+    if (pathname === "/profile/edit") {
+      router.back();
+    } else {
+      router.push("/");
     }
+  };
 
+  const handleImage = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (value: string) => void
+  ) => {
+    e.preventDefault();
 
+    const fileReader = new FileReader();
 
-    return (
-        <Form {...form}>
-        <form 
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col justify-start gap-10"
-        >
-        
-        
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes("image")) return;
+
+      fileReader.onload = async (event) => {
+        const imageDataUrl = event.target?.result?.toString() || "";
+        fieldChange(imageDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        className='flex flex-col justify-start gap-10'
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name='profile_photo'
@@ -154,9 +148,8 @@ const AccountProfile = ( { user, btnTitle }: AccountProfileProps) => {
             </FormItem>
           )}
         />
-        
 
-         <FormField
+        <FormField
           control={form.control}
           name='name'
           render={({ field }) => (
@@ -196,9 +189,7 @@ const AccountProfile = ( { user, btnTitle }: AccountProfileProps) => {
           )}
         />
 
-
-
-         <FormField
+        <FormField
           control={form.control}
           name='bio'
           render={({ field }) => (
@@ -218,13 +209,12 @@ const AccountProfile = ( { user, btnTitle }: AccountProfileProps) => {
           )}
         />
 
-
         <Button type='submit' className='bg-primary-500'>
           {btnTitle}
         </Button>
-        </form>
-      </Form>
-    )
-}
+      </form>
+    </Form>
+  );
+};
 
 export default AccountProfile;
