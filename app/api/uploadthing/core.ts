@@ -29,7 +29,7 @@ export const ourFileRouter = {
  
   // This route takes an attached image OR video
   messageAttachment: f(["image", "video"])
-     .middleware(async () => {
+     .middleware(async (req) => {
       // This code runs on your server before upload
       const user = await getUser();
  
@@ -48,7 +48,7 @@ export const ourFileRouter = {
  
   // Takes ONE image up to 2MB
   strictImageAttachment: f({ image: { maxFileSize: "2MB", maxFileCount: 1 } })
-     .middleware(async () => {
+     .middleware(async (req) => {
       // This code runs on your server before upload
       const user = await getUser();
  
@@ -71,7 +71,7 @@ export const ourFileRouter = {
     image: { maxFileSize: "2MB", maxFileCount: 4 },
     video: { maxFileSize: "256MB", maxFileCount: 1 },
   })
-     .middleware(async () => {
+     .middleware(async (req) => {
       // This code runs on your server before upload
       const user = await getUser();
  
