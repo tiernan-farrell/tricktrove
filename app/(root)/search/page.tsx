@@ -24,8 +24,8 @@ const Page = async () => {
     })
     
     return (
-        <section>
-            <h1>Search</h1>
+        <section className="relative left-32">
+            <h1 className="head-text">Search</h1>
             {/* Search Bar */}
 
             <div className="mt-14 flex flex-full gap-9">

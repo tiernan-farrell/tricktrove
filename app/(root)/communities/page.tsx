@@ -3,8 +3,8 @@
 
 const Page = () => {
     return (
-        <section>
-            <h1>Community</h1>
+        <section className="relative left-32">
+            <h1 className="head-text">Community</h1>
         </section>
     )
 }

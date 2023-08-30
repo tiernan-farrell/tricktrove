@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 import Clip from "../models/clip.model"
+import Community from "../models/community.model";
+
 import { connectToDB } from "../mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
 
@@ -22,6 +24,7 @@ interface FetchUserProps {
     sortBy?: SortOrder
 
 }
+
 
 
 export async function updateUser({
@@ -61,7 +64,10 @@ export async function updateUser({
 export async function fetchUser(userId: string) { 
     try { 
         connectToDB();
-        return await User.findOne({id: userId});
+        return await User.findOne({ id: userId }).populate({
+            path: "communities",
+            model: Community,
+          });
     } catch (err: any) { 
         throw new Error(`Failed to fetch user: ${err.message}`);
     }
@@ -76,15 +82,22 @@ export async function fetchUserPosts(userId: string) {
             .populate({ 
                 path: 'clips',
                 model: Clip,
-                populate: { 
+                populate: [
+                    {
+                        path: "community",
+                        model: Community,
+                        select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+                    },
+                    { 
                     path: 'children',
                     model: Clip,
                     populate: {
                         path: 'author',
                         model: User,
                         select: 'name image id'
-                    }
-                }
+                    },
+                },
+                ],
             }).sort({createdAt: -1})
             console.log(clips)
         return clips;

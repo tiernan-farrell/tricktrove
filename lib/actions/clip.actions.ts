@@ -3,6 +3,7 @@ import { connectToDB } from "../mongoose";
 import Clip from "../models/clip.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
+import Community from "../models/community.model";
 
 
 interface ClipProps { 
@@ -26,11 +27,16 @@ export async function CreateClip({video, caption, author, communityId, path}: Cl
 
         connectToDB();
         
+        const communityIdObject = await Community.findOne(
+            { id: communityId },
+            { _id: 1 }
+        );
+
         const createdClip = await Clip.create({
             video, 
             caption, 
             author, 
-            community: null,
+            community: communityIdObject,
             createdAt: Date.now()
         });
         
@@ -58,6 +64,10 @@ export async function fetchClips(pageNumber = 1, pageSize = 20) {
         .skip(skipAmt)
         .limit(pageSize)
         .populate({ path: 'author', model: User})
+        .populate({
+            path: "community",
+            model: Community,
+          })
         .populate({
             path: 'children',
             populate: {
@@ -89,6 +99,11 @@ export async function fetchClipById(id: string) {
             model: User, 
             select: "_id id name image"
         })
+        .populate({
+            path: "community",
+            model: Community,
+            select: "_id id name image",
+          }) 
         .populate({
             path: 'children',
             populate: [

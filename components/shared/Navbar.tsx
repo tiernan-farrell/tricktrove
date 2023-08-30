@@ -35,7 +35,6 @@ async function Navbar() {
               </div>
             </SignOutButton>
           </SignedIn>
-        </div>
 
         <OrganizationSwitcher
           appearance={{
@@ -44,7 +43,8 @@ async function Navbar() {
               organizationSwitcherTrigger: "py-2 px-4",
             },
           }}
-        />
+          />
+          </div>
       </div>
     </nav>
   );
