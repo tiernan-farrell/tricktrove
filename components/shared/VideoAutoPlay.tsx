@@ -1,12 +1,12 @@
-"use client"
-import { useEffect } from 'react';
+"use client";
+import { useEffect } from "react";
 
 const VideoAutoPlay = () => {
   useEffect(() => {
-    const videos = document.querySelectorAll('video'); // Select all video elements
+    const videos = document.querySelectorAll("video"); // Select all video elements
     const options = {
       root: null, // Use the viewport as the root
-      rootMargin: '0px',
+      rootMargin: "0px",
       threshold: 0.5, // Video should be at least 50% visible to start playing
     };
 

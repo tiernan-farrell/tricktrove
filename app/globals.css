@@ -63,13 +63,8 @@
   }
 
   .topbar {
-    @apply fixed top-0 z-30 flex w-full items-center justify-between bg-dark-2 px-6 py-3;
-    background: rgb(222,91,40);
-    background: -moz-linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
-    background: -webkit-linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
-    background: linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#de5b28",endColorstr="#000000",GradientType=1);  }
-
+    @apply fixed top-0 z-30 flex w-full items-center justify-between bg-dark-1 px-6 py-3;
+  }
   .bottombar {
     @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
   }
@@ -83,7 +78,7 @@
   }
 
   .leftsidebar {
-    @apply flex self-start z-0  h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
+    @apply flex self-start sticky left-0 top-0 z-30 h-screen w-fit flex-col justify-between  border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
   }
 
   .leftsidebar_link {
@@ -95,7 +90,7 @@
   }
 
   .rightsidebar {
-    @apply flex sticky right-0 top-0 z-0  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
+    @apply flex sticky self-start right-0 top-0 z-0  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
   }
 }
 

@@ -4,64 +4,60 @@ import User from "@/lib/models/user.model";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import ClipsTab from "@/components/shared/ClipsTab";
 
-async function Page({ params }: {params: {id: string}}) { 
+async function Page({ params }: { params: { id: string } }) {
+  const user = await currentUser();
+  if (!user) return null;
 
-    const user = await currentUser();
-    if (!user) return null;
+  const userInfo = await fetchUser(params.id);
+  if (!userInfo?.onboarded) redirect("/onboarding");
 
-    const userInfo = await fetchUser(params.id);
-    if(!userInfo?.onboarded) redirect('/onboarding');
+  return (
+    <section>
+      <ProfileHeader
+        accountId={userInfo.id}
+        authUserId={user.id}
+        name={userInfo.name}
+        username={userInfo.username}
+        imgUrl={userInfo.image}
+        bio={userInfo.bio}
+      />
 
-    return (
-        <section>
-            <ProfileHeader 
+      <div className="">
+        <Tabs defaultValue="clips" className="w-full">
+          <TabsList className="tab">
+            {profileTabs.map((tab) => (
+              <TabsTrigger key={tab.label} value={tab.value} className="tab">
+                <Image
+                  src={tab.icon}
+                  alt={tab.label}
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                />
+                <p className="mas-sm:hidden">{tab.label}</p>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {profileTabs.map((tab) => (
+            <TabsContent
+              key={`content-${tab.label}`}
+              value={tab.value}
+              className="w-full text-light-1">
+              <ClipsTab
+                currentUserId={user.id}
                 accountId={userInfo.id}
-                authUserId={user.id}
-                name={userInfo.name}
-                username={userInfo.username}
-                imgUrl={userInfo.image}
-                bio={userInfo.bio}
-            />
-
-            <div className="">
-                <Tabs defaultValue="clips" className="w-full">
-                    <TabsList className="tab">
-                    {profileTabs.map((tab) => (
-                       <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                        <Image 
-                            src={tab.icon}
-                            alt={tab.label}
-                            width={24}
-                            height={24}
-                            className="object-contain"
-                        />
-                        <p className="mas-sm:hidden">{tab.label}</p>
-                       </TabsTrigger> 
-                    ))}
-                    </TabsList>
-                    {profileTabs.map((tab) => (
-                        <TabsContent key={`content-${tab.label}`} value={tab.value} className="w-full text-light-1">
-                            <ClipsTab
-                                currentUserId={user.id}
-                                accountId={userInfo.id}
-                                accountType="User"
-                            />
-                        </TabsContent>
-                    ))}
-
-                </Tabs>
-
-            </div>
-
-        </section>
-    )
-
+                accountType="User"
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+    </section>
+  );
 }
 
-
-
-export default Page; 
+export default Page;

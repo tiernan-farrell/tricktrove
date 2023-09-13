@@ -7,19 +7,16 @@ import { SignUp } from "@clerk/nextjs";
 
 export default async function Home() {
   const user = await currentUser();
-  
-  
-  if (!user) redirect('/sign-in');
-  
+
+  if (!user) redirect("/sign-in");
+
   const result = await fetchClips(1, 30);
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  
   return (
     <>
-
       <section className="mt-9 flex flex-col gap-10 px-5">
         {result.clips.length === 0 ? (
           <p className="no-result">No Clips Found</p>
@@ -41,9 +38,7 @@ export default async function Home() {
             ))}
           </>
         )}
-
       </section>
     </>
-    
-  )
+  );
 }

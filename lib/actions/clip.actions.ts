@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { connectToDB } from "../mongoose";
 import Clip from "../models/clip.model";
 import User from "../models/user.model";
@@ -6,159 +6,158 @@ import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
 import crypto from "crypto";
 
-interface ClipProps { 
-    public_id: string, 
-    caption: string,
-    author: string,
-    communityId: string | null,
-    path: string,
+interface ClipProps {
+  public_id: string;
+  caption: string;
+  author: string;
+  communityId: string | null;
+  path: string;
 }
 
-interface AddCommentProps { 
-    clipId: string,
-    commentText: string,
-    userId: string,
-    path: string,
-    videoUrl?: string,
+interface AddCommentProps {
+  clipId: string;
+  commentText: string;
+  userId: string;
+  path: string;
+  videoUrl?: string;
 }
 
+export async function CreateClip({
+  public_id,
+  caption,
+  author,
+  communityId,
+  path,
+}: ClipProps) {
+  try {
+    connectToDB();
 
-export async function CreateClip({public_id, caption, author, communityId, path}: ClipProps) {
-    try { 
-      
+    const communityIdObject = await Community.findOne(
+      { id: communityId },
+      { _id: 1 },
+    );
 
-        connectToDB();
-        
-        const communityIdObject = await Community.findOne(
-            { id: communityId },
-            { _id: 1 }
-        );
+    const createdClip = await Clip.create({
+      public_id,
+      caption,
+      author,
+      community: communityIdObject,
+      createdAt: Date.now(),
+    });
 
-        const createdClip = await Clip.create({
-            public_id, 
-            caption, 
-            author, 
-            community: communityIdObject,
-            createdAt: Date.now()
-        });
-        
-        await User.findByIdAndUpdate(author, {
-            $push: { clips: createdClip._id }
-        })
-        
-        revalidatePath(path);
-    } catch(err: any) { 
-        console.log(err.message);
-        throw new Error(`Error Uploading Clip: ${err.message}`);
-    }
+    await User.findByIdAndUpdate(author, {
+      $push: { clips: createdClip._id },
+    });
+
+    revalidatePath(path);
+  } catch (err: any) {
+    console.log(err.message);
+    throw new Error(`Error Uploading Clip: ${err.message}`);
+  }
 }
 
-export async function fetchClips(pageNumber = 1, pageSize = 3) { 
+export async function fetchClips(pageNumber = 1, pageSize = 3) {
+  try {
+    connectToDB();
 
-    try { 
+    const skipAmt = (pageNumber - 1) * pageSize;
+    // Fetch Top Level Clips
+    const clipsQuery = Clip.find({ parentId: { $in: [null, undefined] } })
+      .skip(skipAmt)
+      .limit(pageSize)
+      .populate({ path: "author", model: User })
+      .populate({
+        path: "community",
+        model: Community,
+      })
+      .populate({
+        path: "children",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
+      });
+    // const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
+    const clipsCount = 1;
 
-        connectToDB();
+    const clips = await clipsQuery.exec();
 
-        const skipAmt = (pageNumber-1)  * pageSize;
-        // Fetch Top Level Clips 
-        const clipsQuery = Clip.find({parentId:  { $in: [null, undefined]}})
-        .skip(skipAmt)
-        .limit(pageSize)
-        .populate({ path: 'author', model: User})
-        .populate({
-            path: "community",
-            model: Community,
-          })
-        .populate({
-            path: 'children',
-            populate: {
-                path: 'author',
-                model: User,
-                select: "_id name parentId image"
-            }
-        })    
-        // const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
-        const clipsCount = 1
-
-        const clips = await clipsQuery.exec();
-
-        const isNext = clipsCount > skipAmt+ clips.length;
-        console.log(clips.map((c) => c.author))
-        return { clips, isNext }
-    } catch(err: any) { 
-        throw new Error(`FetchClips ${err.message}`);
-    }
+    const isNext = clipsCount > skipAmt + clips.length;
+    console.log(clips.map((c) => c.author));
+    return { clips, isNext };
+  } catch (err: any) {
+    throw new Error(`FetchClips ${err.message}`);
+  }
 }
 
 export async function fetchClipById(id: string) {
-    
-    try { 
-        connectToDB();
-        const clip = await Clip.findById(id)
-        .populate({
-            path: 'author',
-            model: User, 
-            select: "_id id name image"
-        })
-        .populate({
-            path: "community",
-            model: Community,
-            select: "_id id name image",
-          }) 
-        .populate({
-            path: 'children',
-            populate: [
-                {
-                    path: 'author',
-                    model: User, 
-                    select: "_id id name parentId image"
-                }, 
-                {
-                    path: 'children',
-                    model: Clip,
-                    select: "_id id name parentId image"
-                }
-            ]
-        }).exec();
+  try {
+    connectToDB();
+    const clip = await Clip.findById(id)
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "community",
+        model: Community,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "author",
+            model: User,
+            select: "_id id name parentId image",
+          },
+          {
+            path: "children",
+            model: Clip,
+            select: "_id id name parentId image",
+          },
+        ],
+      })
+      .exec();
 
-        return clip;
-    }catch (err: any) { 
-        console.log(err);
-        throw new Error(`Error fetching thread: ${err.message}`);
-    }
+    return clip;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(`Error fetching thread: ${err.message}`);
+  }
 }
 
-export async function addCommentToClip(
-    {
-        clipId,
-        commentText,
-        userId, 
-        path,
-        videoUrl
-    }: AddCommentProps) { 
-        connectToDB();
+export async function addCommentToClip({
+  clipId,
+  commentText,
+  userId,
+  path,
+  videoUrl,
+}: AddCommentProps) {
+  connectToDB();
 
-        try {
-            console.log((userId.substring(1, userId.length-1)))
-            // find original clip by id
-            const originalClip = await Clip.findById(clipId);
+  try {
+    console.log(userId.substring(1, userId.length - 1));
+    // find original clip by id
+    const originalClip = await Clip.findById(clipId);
 
-            if (!originalClip) throw new Error("Clip not found");
+    if (!originalClip) throw new Error("Clip not found");
 
-            const commentClip = new Clip({
-                public_id: videoUrl,
-                caption: commentText,
-                author: userId.substring(1, userId.length-1)
-            
-            })
-            const savedCommentClip = await commentClip.save();
+    const commentClip = new Clip({
+      public_id: videoUrl,
+      caption: commentText,
+      author: userId.substring(1, userId.length - 1),
+    });
+    const savedCommentClip = await commentClip.save();
 
-            originalClip.children.push(savedCommentClip._id);
+    originalClip.children.push(savedCommentClip._id);
 
-            await originalClip.save();
+    await originalClip.save();
 
-            revalidatePath(path);
-        } catch(err: any) { 
-            throw new Error(`Error Adding Comment to Clip ${err.message}`);
-        }
+    revalidatePath(path);
+  } catch (err: any) {
+    throw new Error(`Error Adding Comment to Clip ${err.message}`);
+  }
 }
