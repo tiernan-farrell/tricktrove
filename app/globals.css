@@ -5,7 +5,8 @@
 @layer components {
   /* main */
   .main-container {
-    @apply flex min-h-screen flex flex-1 flex-col items-center bg-dark-1 px-32 pb-10 pt-28 max-md:pb-32 sm:px-10;
+    @apply absolute top-0 left-0 right-0 flex min-h-screen flex-1 flex-row items-center bg-dark-1 w-full;
+    justify-content: space-between;
   }
 
   .logo { 
@@ -63,7 +64,11 @@
 
   .topbar {
     @apply fixed top-0 z-30 flex w-full items-center justify-between bg-dark-2 px-6 py-3;
-  }
+    background: rgb(222,91,40);
+    background: -moz-linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
+    background: -webkit-linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
+    background: linear-gradient(90deg, rgba(222,91,40,1) 0%, rgba(0,0,0,1) 65%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#de5b28",endColorstr="#000000",GradientType=1);  }
 
   .bottombar {
     @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
@@ -78,7 +83,7 @@
   }
 
   .leftsidebar {
-    @apply fixed left-0 top-0 z-0 flex h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
+    @apply flex self-start z-0  h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
   }
 
   .leftsidebar_link {
@@ -90,7 +95,7 @@
   }
 
   .rightsidebar {
-    @apply fixed w-fit right-0 top-0 z-0 flex  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
+    @apply flex sticky right-0 top-0 z-0  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
   }
 }
 

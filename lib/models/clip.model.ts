@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const clipSchema = new mongoose.Schema({
-    video: { type: String, required: true}, 
+    public_id: String, 
     caption: String,
     author: { 
         type: mongoose.Schema.Types.ObjectId,

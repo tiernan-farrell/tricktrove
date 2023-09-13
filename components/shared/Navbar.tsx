@@ -2,23 +2,23 @@ import { OrganizationSwitcher, SignedIn, SignOutButton, UserButton } from "@cler
 import { dark } from "@clerk/themes";
 import Link from "next/link";
 import Image from "next/image";
-import { currentUser } from "@clerk/nextjs";
+
+
 
 async function Navbar() {
-  const User = await currentUser();
-
+  
   return (
 
     <nav className='topbar'>
       <Link href='/' className='flex items-center gap-1'>
         <Image src='/logo.svg' alt='logo' width={48} height={48} className="logo"/>
-        <p className='text-heading3-bold  text-dark-1 max-xs:hidden'>TrickTrove</p>
       </Link>
 
 
       <div className='flex items-center gap-1'>
         <div className='block md:hidden'>
-          <SignedIn>
+          <UserButton afterSignOutUrl="/" ></UserButton>
+          {/* <SignedIn>
             <SignOutButton>
               <div className='flex cursor-pointer'>
                 <Image
@@ -30,11 +30,17 @@ async function Navbar() {
               </div>
             </SignOutButton>
             
-          </SignedIn>
+          </SignedIn> */}
         </div>
 
-        <div className="block ">
+        <Link href='/' className='flex items-center gap-1'>
 
+        <p className='text-heading3-bold  text-primary-500 max-xs:hidden'>TrickTrove</p>
+        </Link>
+
+
+        <div className="block ">
+       
         <OrganizationSwitcher
           appearance={{
             baseTheme: dark,

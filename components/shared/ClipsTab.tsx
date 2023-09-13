@@ -67,7 +67,7 @@ const ClipsTab = async({
                     id={clip._id}
                     currentUserId={currentUserId}
                     parentId={clip.parentId}
-                    content={clip.content}
+                    public_id={clip.public_id}
                     caption={clip.caption}
                     author={
                         accountType === 'User'

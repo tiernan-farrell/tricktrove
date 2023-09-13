@@ -2,14 +2,14 @@ import * as z from 'zod';
 
 
 export const ClipValidation = z.object({
-    video: z.string().url(), 
+    publicId: z.string().url().optional(), 
     caption: z.string().max(500),
     author: z.string(),
 })
 
 
 export const CommentValidation = z.object({
-    video: z.string().url(), 
+    public_id: z.string().url().optional(), 
     comment: z.string().max(500),
     accountId: z.string(),
 })

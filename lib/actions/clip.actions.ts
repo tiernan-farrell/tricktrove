@@ -4,10 +4,10 @@ import Clip from "../models/clip.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
-
+import crypto from "crypto";
 
 interface ClipProps { 
-    video: string, 
+    public_id: string, 
     caption: string,
     author: string,
     communityId: string | null,
@@ -19,11 +19,13 @@ interface AddCommentProps {
     commentText: string,
     userId: string,
     path: string,
-    videoUrl: string,
+    videoUrl?: string,
 }
 
-export async function CreateClip({video, caption, author, communityId, path}: ClipProps) {
+
+export async function CreateClip({public_id, caption, author, communityId, path}: ClipProps) {
     try { 
+      
 
         connectToDB();
         
@@ -33,7 +35,7 @@ export async function CreateClip({video, caption, author, communityId, path}: Cl
         );
 
         const createdClip = await Clip.create({
-            video, 
+            public_id, 
             caption, 
             author, 
             community: communityIdObject,
@@ -51,7 +53,7 @@ export async function CreateClip({video, caption, author, communityId, path}: Cl
     }
 }
 
-export async function fetchClips(pageNumber = 1, pageSize = 20) { 
+export async function fetchClips(pageNumber = 1, pageSize = 3) { 
 
     try { 
 
@@ -60,7 +62,6 @@ export async function fetchClips(pageNumber = 1, pageSize = 20) {
         const skipAmt = (pageNumber-1)  * pageSize;
         // Fetch Top Level Clips 
         const clipsQuery = Clip.find({parentId:  { $in: [null, undefined]}})
-        .sort({createdAt: -1})
         .skip(skipAmt)
         .limit(pageSize)
         .populate({ path: 'author', model: User})
@@ -76,13 +77,13 @@ export async function fetchClips(pageNumber = 1, pageSize = 20) {
                 select: "_id name parentId image"
             }
         })    
-        const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
-        
+        // const clipsCount = await Clip.countDocuments({ parentId: { $in: [null, undefined]}})
+        const clipsCount = 1
+
         const clips = await clipsQuery.exec();
 
-        
         const isNext = clipsCount > skipAmt+ clips.length;
-        
+        console.log(clips.map((c) => c.author))
         return { clips, isNext }
     } catch(err: any) { 
         throw new Error(`FetchClips ${err.message}`);
@@ -138,16 +139,16 @@ export async function addCommentToClip(
         connectToDB();
 
         try {
-
+            console.log((userId.substring(1, userId.length-1)))
             // find original clip by id
             const originalClip = await Clip.findById(clipId);
 
             if (!originalClip) throw new Error("Clip not found");
 
             const commentClip = new Clip({
-                video: videoUrl,
+                public_id: videoUrl,
                 caption: commentText,
-                author: userId
+                author: userId.substring(1, userId.length-1)
             
             })
             const savedCommentClip = await commentClip.save();

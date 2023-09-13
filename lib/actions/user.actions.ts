@@ -5,8 +5,10 @@ import User from "../models/user.model";
 import Clip from "../models/clip.model"
 import Community from "../models/community.model";
 
+
 import { connectToDB } from "../mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
+import { Console } from "console";
 
 interface UpdateUserProps { 
     userId: string, 
@@ -35,8 +37,9 @@ export async function updateUser({
     image, 
     path
 }: UpdateUserProps): Promise<void> { 
-    connectToDB();
     try { 
+        console.log('Conntecting to DB from: update User');
+        connectToDB();
 
         await User.findOneAndUpdate(
             { id: userId }, 
@@ -62,7 +65,8 @@ export async function updateUser({
 
 
 export async function fetchUser(userId: string) { 
-    try { 
+    try {
+        console.log('Conntecting to DB from: fetch User'); 
         connectToDB();
         return await User.findOne({ id: userId }).populate({
             path: "communities",
@@ -74,7 +78,8 @@ export async function fetchUser(userId: string) {
 }
 
 export async function fetchUserPosts(userId: string) { 
-    try { 
+    try {
+        console.log('Conntecting to DB from: fetchUserPosts'); 
         connectToDB();
         
         // Find all clips with the auther of user for given userId
@@ -112,10 +117,11 @@ export async function fetchUsers({
     userId, 
     searchString = "",
     pageNumber = 1,
-    pageSize = 20,
+    pageSize = 5,
     sortBy = -1
 }: FetchUserProps ) { 
     try {
+        console.log('Conntecting to DB from: fetchUsers');
         connectToDB();
 
         const skipAmt = (pageNumber - 1) * pageSize;
@@ -137,11 +143,11 @@ export async function fetchUsers({
 
 
         const userQuery = User.find(query)
-            .sort(sortOptions)
             .skip(skipAmt)
             .limit(pageSize)
 
-        const userCount = await User.countDocuments(query);
+        // const userCount = await User.countDocuments(query);
+        const userCount = 1;
 
         const users = await userQuery.exec();
 
@@ -157,7 +163,9 @@ export async function fetchUsers({
 
 
 export async function getActivity(userId: string) {
-    try {
+    try
+    {
+        console.log('Conntecting to DB from: getActivity'); 
       connectToDB();
   
       // Find all threads created by the user

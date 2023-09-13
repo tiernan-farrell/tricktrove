@@ -1,17 +1,18 @@
 
-
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
 import ReactPlayer from 'react-player'
+import VideoAutoPlay from "../shared/VideoAutoPlay";
+import VideoPlayer from "../shared/VideoPlayer";
 
 
 interface ClipCardProps { 
     id: string;
     currentUserId: string; 
     parentId: string | null;
-    content: string;
+    public_id: string;
     caption: string;
     author: {
         name: string; 
@@ -33,12 +34,12 @@ interface ClipCardProps {
 }
 
 
-
+3
 const ClipCard = ({
     id,
     currentUserId,
     parentId,
-    content,
+    public_id,
     caption,
     author,
     community,
@@ -48,12 +49,8 @@ const ClipCard = ({
     }: ClipCardProps) => {
         // console.log(`Community: ${community}`);
 
-
-        const blob = new Blob([content], { type: 'video/quicktime' });
-        const videoUrl = URL.createObjectURL(blob);
-
         const dateString = JSON.stringify(createdAt);
-        const inputDate = new Date(dateString.substring(1, dateString.length-1));
+        const inputDate = new Date(dateString?.substring(1, dateString.length-1));
 
 
 
@@ -68,8 +65,8 @@ const ClipCard = ({
 
 
 
-        
         return (
+            <>
 
             <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7 mt-7">
                 <div className="flex items-start justify-between">
@@ -81,27 +78,31 @@ const ClipCard = ({
                                     alt="Profile Image"
                                     fill
                                     className="cursor-pointer rounded-full"
-                                />
+                                    />
                             </Link>
-                        <div className="thread-card_bar" /> 
                         </div>
-
+                        <div className="thread-card_bar" /> 
                     <div className="flex w-full flex-col">
                         <Link href={`/profile/${author.id}`} className="w-fit">
                             <h4 className="cursor-pointer text-base-semibold text-light-1">{author.name}</h4>
                         </Link>
-                        {/* TODO: Implement video display here */}
+                        <div>
                         <p className="mt-2 text-small-regular text-light-2 p-4">{caption}</p>
-                        <div className="video-player">
-                            <video controls src={content}/>
+                            
                         </div>
-                        {/* <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' /> */}
+                        
+                        <div className="flex w-300 h-300">
+                            <VideoPlayer id={public_id}/>
+                            {/* <video  controls  playsInline  loop preload="auto" src={`${process.env.AWS_CLOUDFRONT_DOMANIN_NAME}busStationNoseslide.mp4`}/> */}
+                        </div>
+                        <VideoAutoPlay />
+                        {/* <ReactPlayer url={content}/> */}
                         <p className="mt-2 text-small-regular text-light-2">{date}</p>
-                            {!isComment && community ? (
-                        <Link
-                        href={`/communities/${community.id}`}
-                        className='mt-5 flex items-center'
-                        >
+                            {!isComment && community && (
+                                <Link
+                                href={`/communities/${community.id}`}
+                                className='mt-5 flex items-center'
+                                >
                         <p className='text-subtle-medium text-gray-1'>
                             {date}
                             {community && ` - ${community.name} Community`}
@@ -112,9 +113,9 @@ const ClipCard = ({
                             width={14}
                             height={14}
                             className='ml-1 rounded-full object-cover'
-                        />
+                            />
                         </Link>
-                        ): (<></>)}
+                        )}
 
                         <div className="mt-5 flex flex-col gap-3">
                             <div className="flex gap-3.5">
@@ -124,7 +125,7 @@ const ClipCard = ({
                                     width={24}
                                     height={24}
                                     className='cursor-pointer object-contain'
-                                />
+                                    />
                                 <Link href={`/clip/${id}`}>
                                 <Image
                                     src='/assets/reply.svg'
@@ -132,7 +133,7 @@ const ClipCard = ({
                                     width={24}
                                     height={24}
                                     className='cursor-pointer object-contain'
-                                />
+                                    />
                                 </Link>
                                 <Image
                                     src='/assets/repost.svg'
@@ -140,19 +141,19 @@ const ClipCard = ({
                                     width={24}
                                     height={24}
                                     className='cursor-pointer object-contain'
-                                />
+                                    />
                                 <Image
                                     src='/assets/share.svg'
                                     alt='heart'
                                     width={24}
                                     height={24}
                                     className='cursor-pointer object-contain'
-                                />
+                                    />
                             </div>
                         </div>
                         </div>
                             {!isComment && comments.length > 0 && (
-                            <div className='ml-1 mt-3 flex items-center gap-2'>
+                                <div className='ml-1 mt-3 flex items-center gap-2'>
                             {comments.slice(0, 2).map((comment, index) => (
                                 <Image
                                 key={index}
@@ -162,7 +163,7 @@ const ClipCard = ({
                                 height={24}
                                 className={`${index !== 0 && "-ml-5"} rounded-full object-cover`}
                                 />
-                            ))}
+                                ))}
                                 <Link href={`/clip/${id}`}>
                                 <p className='mt-1 text-subtle-medium text-gray-1'>
                                     {comments.length} repl{comments.length > 1 ? "ies" : "y"}
@@ -173,8 +174,9 @@ const ClipCard = ({
                     </div>
                                 
 
-                    </div>
+            </div>
             </article>
+        </>
         )
 }
 

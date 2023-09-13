@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <>
 
-      <section className="mt-9 flex flex-col gap-10">
+      <section className="mt-9 flex flex-col gap-10 px-5">
         {result.clips.length === 0 ? (
           <p className="no-result">No Clips Found</p>
         ) : (
@@ -29,7 +29,7 @@ export default async function Home() {
                 id={clip._id}
                 currentUserId={user?.id || ""}
                 parentId={clip.parentId}
-                content={clip.video}
+                public_id={clip.public_id}
                 caption={clip.caption}
                 author={clip.author}
                 community={clip.community}

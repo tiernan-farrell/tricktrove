@@ -14,10 +14,10 @@ const Page = async ({params}: {params: {id: string}}) => {
     if(!user ) return null; 
 
     const userInfo = await fetchUser(user.id);
-    if(!userInfo.onboarding) redirect('/onboarding');
+    if(!userInfo.onboarded) redirect('/onboarding');
 
     const clip = await fetchClipById(params.id);
-
+    userInfo._id = userInfo._id.toString();
     return(
 
         <section className="relative">
@@ -27,7 +27,7 @@ const Page = async ({params}: {params: {id: string}}) => {
                     id={clip._id}
                     currentUserId={user?.id || ""}
                     parentId={clip.parentId}
-                    content={clip.video}
+                    public_id={clip.public_id}
                     caption={clip.caption}
                     author={clip.author}
                     community={clip.community}
@@ -46,7 +46,7 @@ const Page = async ({params}: {params: {id: string}}) => {
             id={c._id}
             currentUserId={user?.id || ""}
             parentId={c.parentId}
-            content={c.video}
+            public_id={c.public_id}
             caption={c.caption}
             author={c.author}
             community={c.community}
@@ -60,7 +60,7 @@ const Page = async ({params}: {params: {id: string}}) => {
             <Comment
                 clipId={clip.id}
                 currentUserImg={user.imageUrl}
-                currentUserId={JSON.stringify(userInfo._id)}
+                currentUserId={userInfo._id}
             />
            </div>
         </section>

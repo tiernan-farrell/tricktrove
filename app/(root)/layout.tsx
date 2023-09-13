@@ -26,19 +26,19 @@ export default function RootLayout({
       baseTheme: dark,
     }}>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={inter.className}> 
          <Navbar />
          
         <main>
           <section className='main-container'>
-            <div className='w-full max-w-4xl'>
+          <LeftSidebar />
+            <div className='w-full max-w-4xl grow'>
           {children}
             </div>
+          <RightSidebar />
           </section>
-          <LeftSidebar />
           
 
-          <RightSidebar />
           </main> 
           <Bottombar />
         </body>
