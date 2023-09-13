@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode}) {
             <html lang="en">
                 <body>
                     <section className='main-container'>
-                        <div className='w-full max-w-4xl'>
+                        <div className='w-full max-w-4xl flex justify-center align-center'>
                             {children}
                         </div>
                     </section>

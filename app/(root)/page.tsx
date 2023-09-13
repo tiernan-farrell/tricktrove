@@ -3,12 +3,14 @@ import { fetchClips } from "@/lib/actions/clip.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { UserButton, currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { SignUp } from "@clerk/nextjs";
 
 export default async function Home() {
   const user = await currentUser();
   
   
-  if (!user) return null;
+  if (!user) return <SignUp />;
+  
   const result = await fetchClips(1, 30);
 
   const userInfo = await fetchUser(user.id);

@@ -27,7 +27,7 @@ async function Page({ params }: {params: {id: string}}) {
                 bio={userInfo.bio}
             />
 
-            <div className="mt-9">
+            <div className="">
                 <Tabs defaultValue="clips" className="w-full">
                     <TabsList className="tab">
                     {profileTabs.map((tab) => (

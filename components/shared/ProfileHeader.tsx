@@ -21,10 +21,12 @@ function ProfileHeader({
   type,
 }: Props) {
   return (
-    <div className='flex w-full flex-col justify-start'>
-      <div className='flex items-center justify-between'>
+
+    <div className='flex w-full flex-col self-start'>
+      <h3 className="head-text p-10">Profile</h3>
+      <div className='flex items-center justify-start'>
         <div className='flex items-center gap-3'>
-          <div className='relative h-20 w-20 object-cover'>
+          <div className='relative h-20 w-20 object-cover '>
             <Image
               src={imgUrl}
               alt='logo'
@@ -42,7 +44,7 @@ function ProfileHeader({
         </div>
         {accountId === authUserId && type !== "Community" && (
           <Link href='/profile/edit'>
-            <div className='flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2'>
+            <div className='m-10 flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2'>
               <Image
                 src='/assets/edit.svg'
                 alt='logout'
@@ -60,6 +62,7 @@ function ProfileHeader({
 
       <div className='mt-12 h-0.5 w-full bg-dark-3' />
     </div>
+
   );
 }
 
