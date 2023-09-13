@@ -8,7 +8,7 @@ async function Page() {
 
     const user = await currentUser();
 
-    if(!user) return <SignUp />;
+    if(!user) return;
     const userInfo = await fetchUser(user.id);
  
 
