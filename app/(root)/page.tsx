@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const user = await currentUser();
-  const result = await fetchClips(1, 30);
-
-
+  
+  
   if (!user) return null;
+  const result = await fetchClips(1, 30);
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
