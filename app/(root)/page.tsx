@@ -34,6 +34,7 @@ export default async function Home() {
                 community={clip.community}
                 createdAt={clip.createdAt}
                 comments={clip.children}
+                tags={clip.tags}
               />
             ))}
           </>

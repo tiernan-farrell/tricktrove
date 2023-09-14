@@ -4,7 +4,7 @@ import Clip from "../models/clip.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
-import crypto from "crypto";
+
 
 interface ClipProps {
   public_id: string;
@@ -12,6 +12,7 @@ interface ClipProps {
   author: string;
   communityId: string | null;
   path: string;
+  tags: string[];
 }
 
 interface AddCommentProps {
@@ -28,6 +29,7 @@ export async function CreateClip({
   author,
   communityId,
   path,
+  tags
 }: ClipProps) {
   try {
     connectToDB();
@@ -43,6 +45,7 @@ export async function CreateClip({
       author,
       community: communityIdObject,
       createdAt: Date.now(),
+      tags
     });
 
     await User.findByIdAndUpdate(author, {

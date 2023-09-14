@@ -39,8 +39,8 @@ async function Navbar() {
           </SignedIn> */}
         </div>
 
-        <Link href="/" className="flex items-center gap-1">
-          <p className="text-heading3-bold  text-primary-500 max-xs:hidden">
+        <Link href="/" className="flex items-center justify-center gap-1">
+          <p className="text-heading3-bold justify-center text-primary-500 max-xs:hidden">
             TrickTrove
           </p>
         </Link>

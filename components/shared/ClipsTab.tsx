@@ -76,6 +76,7 @@ const ClipsTab = async ({
           community={clip.community}
           createdAt={clip.createdAt}
           comments={clip.children}
+          tags={clip.tags}
         />
       ))}
     </section>

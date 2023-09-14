@@ -30,6 +30,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           community={clip.community}
           createdAt={clip.createdAt}
           comments={clip.children}
+          tags={clip.tags}
         />
       </div>
 
@@ -47,6 +48,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
             createdAt={c.createdAt}
             comments={c.children}
             isComment
+            tags={c.tags}
           />
         ))}
       </div>

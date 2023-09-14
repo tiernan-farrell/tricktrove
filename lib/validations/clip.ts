@@ -5,6 +5,7 @@ export const ClipValidation = z.object({
     publicId: z.string().url().optional(), 
     caption: z.string().max(500),
     author: z.string(),
+    tags: z.string().array().optional()
 })
 
 

@@ -22,6 +22,7 @@ const clipSchema = new mongoose.Schema({
       ref: "Clip",
     },
   ],
+  tags: [String],
 });
 
 const Clip = mongoose.models.Clip || mongoose.model("Clip", clipSchema);

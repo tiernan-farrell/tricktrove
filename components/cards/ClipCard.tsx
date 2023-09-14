@@ -2,9 +2,9 @@ import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import ReactPlayer from "react-player";
 import VideoAutoPlay from "../shared/VideoAutoPlay";
 import VideoPlayer from "../shared/VideoPlayer";
+import TagCard from "../shared/TagCard";
 
 interface ClipCardProps {
   id: string;
@@ -29,6 +29,7 @@ interface ClipCardProps {
     };
   }[];
   isComment?: boolean;
+  tags: string[];
 }
 
 3;
@@ -43,6 +44,7 @@ const ClipCard = ({
   createdAt,
   comments,
   isComment,
+  tags,
 }: ClipCardProps) => {
   // console.log(`Community: ${community}`);
 
@@ -95,6 +97,12 @@ const ClipCard = ({
               <VideoAutoPlay />
               {/* <ReactPlayer url={content}/> */}
               <p className="mt-2 text-small-regular text-light-2">{date}</p>
+
+              {/* TODO: Display Video Tags Here  */}
+              <div className="flex gap-2">
+                {tags?.map((tag) => <TagCard key={tag} tagName={tag} />)}
+              </div>
+
               {!isComment && community && (
                 <Link
                   href={`/communities/${community.id}`}
