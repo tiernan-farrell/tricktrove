@@ -17,7 +17,7 @@ export default async function Home() {
 
   return (
     <>
-      <section className="mt-9 flex flex-col gap-10 px-5">
+      <section className="px-3 flex flex-col gap-10 mt-28">
         {result.clips.length === 0 ? (
           <p className="no-result">No Clips Found</p>
         ) : (

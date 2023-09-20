@@ -1,0 +1,11 @@
+Features: 
+    - Like 
+    - Comment
+    - Share
+    - Search by tags
+    
+
+
+Bugs: 
+    - Deoployment Vercel edge function timeout 
+    - Clerk redirect infinite loop 

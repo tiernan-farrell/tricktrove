@@ -62,7 +62,7 @@ const ClipCard = ({
 
   return (
     <>
-      <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7 mt-7">
+      <article className="flex w-full flex-col rounded-xl bg-dark-2 lg:p-10 md:p-6 sm:p-2 gap-10">
         <div className="flex items-start justify-between">
           <div className="flex w-full flex-1 flex-row gap-4">
             <div className="flex flex-col items-center">
@@ -84,12 +84,7 @@ const ClipCard = ({
                   {author.name}
                 </h4>
               </Link>
-              <div>
-                <p className="mt-2 text-small-regular text-light-2 p-4">
-                  {caption}
-                </p>
-              </div>
-
+         
               <div className="flex w-300 h-300">
                 <VideoPlayer id={public_id} />
                 {/* <video  controls  playsInline  loop preload="auto" src={`${process.env.AWS_CLOUDFRONT_DOMANIN_NAME}busStationNoseslide.mp4`}/> */}
@@ -99,9 +94,15 @@ const ClipCard = ({
               <p className="mt-2 text-small-regular text-light-2">{date}</p>
 
               {/* TODO: Display Video Tags Here  */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {tags?.map((tag) => <TagCard key={tag} tagName={tag} />)}
               </div>
+                   <div>
+                <p className="mt-2 text-small-regular text-light-2">
+                  {caption}
+                </p>
+              </div>
+
 
               {!isComment && community && (
                 <Link

@@ -62,8 +62,23 @@
     @apply border-none bg-dark-3 text-base-regular text-light-4 outline-none !important;
   }
 
+  .active-search-button {
+    @apply bg-primary-500 !important;
+  }
+  .search-button { 
+    @apply hover:bg-primary-500;
+  }
   .topbar {
-    @apply fixed top-0 z-30 flex w-full items-center justify-between bg-dark-1 px-6 py-3;
+    @apply fixed top-0 z-40 flex w-full items-center bg-dark-2 py-3 justify-between;
+  }
+  .logo-lettering { 
+    @apply flex self-center place-self-center ;
+  }
+  .org { 
+    @apply flex;
+  }
+  .top-bar-signout { 
+    @apply flex;
   }
   .bottombar {
     @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
@@ -92,6 +107,7 @@
   .rightsidebar {
     @apply flex sticky self-start right-0 top-0 z-0  h-screen flex-col justify-around overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
   }
+
 }
 
 @layer utilities {

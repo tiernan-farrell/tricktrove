@@ -177,3 +177,27 @@ export async function getActivity(userId: string) {
     throw new Error(`Error fetching Activity ${err.message}`);
   }
 }
+
+export async function searchUsers(searchString: string) {
+  try {
+    connectToDB();
+    const regex = new RegExp(searchString, "i");
+
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchString.trim() !== "") {
+      query.$or = [
+        { username: { $regex: regex } },
+        { name: { $regex: regex } },
+      ];
+    }
+
+    const userQuery = User.find(query);
+
+    const users = await userQuery.exec();
+
+    return users; 
+  } catch (err: any) {
+    throw new Error(`SearchUsers: ${err.message}`);
+  }
+}
