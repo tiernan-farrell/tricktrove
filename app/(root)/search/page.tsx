@@ -24,7 +24,7 @@ const Page = async () => {
   });
 
   return (
-    <section className="relative px-6">
+    <section className="relative px-6 py-7 mt-28">
       <h1 className="head-text">Search</h1>
 
       <div className="mt-5">

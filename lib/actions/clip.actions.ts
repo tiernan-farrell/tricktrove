@@ -5,7 +5,6 @@ import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
 
-
 interface ClipProps {
   public_id: string;
   caption: string;
@@ -29,7 +28,7 @@ export async function CreateClip({
   author,
   communityId,
   path,
-  tags
+  tags,
 }: ClipProps) {
   try {
     connectToDB();
@@ -45,7 +44,7 @@ export async function CreateClip({
       author,
       community: communityIdObject,
       createdAt: Date.now(),
-      tags
+      tags,
     });
 
     await User.findByIdAndUpdate(author, {
@@ -162,5 +161,16 @@ export async function addCommentToClip({
     revalidatePath(path);
   } catch (err: any) {
     throw new Error(`Error Adding Comment to Clip ${err.message}`);
+  }
+}
+
+export async function getClipsByTag(tag: string) {
+  try {
+    connectToDB();
+    const clips = Clip.find({ tags: { $regex: new RegExp(tag.trim(), "i") } }).exec();
+
+    return clips;
+  } catch (err: any) {
+    throw new Error(`GetClipsByTag: ${err.message}`);
   }
 }
