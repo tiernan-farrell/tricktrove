@@ -115,33 +115,42 @@ export async function fetchUsers({
   try {
     console.log("Conntecting to DB from: fetchUsers");
     connectToDB();
-
+    console.log(`uri: ${process.env.MONGODB_URL}`);
     const skipAmt = (pageNumber - 1) * pageSize;
+    console.log(120);
 
     const regex = new RegExp(searchString, "i");
 
+    console.log(124);
     const query: FilterQuery<typeof User> = {
       id: { $ne: userId },
     };
 
+    console.log(129);
     if (searchString.trim() !== "") {
+      console.log(131);
       query.$or = [
         { username: { $regex: regex } },
         { name: { $regex: regex } },
       ];
     }
+    console.log(137);
 
     const sortOptions = { createdAt: sortBy };
+    console.log(140);
 
     const userQuery = User.find(query).skip(skipAmt).limit(pageSize);
+    console.log(143);
 
     // const userCount = await User.countDocuments(query);
     const userCount = 1;
+    console.log(147);
 
     const users = await userQuery.exec();
+    console.log(150);
 
     const isNext = userCount > skipAmt + users.length;
-
+    console.log(153);
     return { users, isNext };
   } catch (err: any) {
     throw new Error(`Error Fetching Users ${err.message}`);
@@ -196,7 +205,7 @@ export async function searchUsers(searchString: string) {
 
     const users = await userQuery.exec();
 
-    return users; 
+    return users;
   } catch (err: any) {
     throw new Error(`SearchUsers: ${err.message}`);
   }
