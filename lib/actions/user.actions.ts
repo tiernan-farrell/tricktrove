@@ -146,6 +146,7 @@ export async function fetchUsers({
     const userCount = 1;
     console.log(147);
 
+    console.log(userQuery)
     const users = await userQuery.exec();
     console.log(150);
 
