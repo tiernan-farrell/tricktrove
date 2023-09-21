@@ -115,7 +115,7 @@ export async function fetchUsers({
   try {
     console.log("Conntecting to DB from: fetchUsers");
     connectToDB();
-    console.log(`uri: ${process.env.MONGODB_URL}`);
+    console.log(`uri: ${process.env.MONGODB_URI}`);
     const skipAmt = (pageNumber - 1) * pageSize;
     console.log(120);
 
