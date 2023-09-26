@@ -7,7 +7,7 @@ import Community from "../models/community.model";
 
 import { connectToDB } from "../mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
-import { Console } from "console";
+
 
 interface UpdateUserProps {
   userId: string;

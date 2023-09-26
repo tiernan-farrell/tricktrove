@@ -31,6 +31,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           createdAt={clip.createdAt}
           comments={clip.children}
           tags={clip.tags}
+          
         />
       </div>
 

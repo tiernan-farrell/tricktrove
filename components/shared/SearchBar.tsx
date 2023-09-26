@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Children, FormEvent, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -11,6 +11,7 @@ import UserCard from "../cards/UserCard";
 import ClipCard from "../cards/ClipCard";
 import { getClipsByTag } from "@/lib/actions/clip.actions";
 
+
 interface Props {
   routeType: string;
 }
@@ -19,9 +20,19 @@ function Searchbar({ routeType }: Props) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [selectedSearchType, setSelectedSearchType] =
-    useState<SearchType>("Users");
+    useState<SearchType>("Trick Tags");
   const [results, setResults] = useState<any>([]);
-  const searchOptions: SearchType[] = ["Users", "Communities", "Trick Tags"];
+  const searchOptions: SearchType[] = ["Trick Tags", "Communities", "Users"];
+  const searchParams = useSearchParams();
+
+
+  useEffect(() => {
+    const query = searchParams.get('q');
+    if (query !== null) { 
+      handleSearch();
+    }
+  }, []);
+
 
   const handleButtonClick = (option: SearchType) => {
     setSelectedSearchType(option);
@@ -44,9 +55,9 @@ function Searchbar({ routeType }: Props) {
     // }
     let res = null;
     if (selectedSearchType === 'Users')
-        res = await searchUsers(search);
-    else if (selectedSearchType === 'Trick Tags') { 
-        res = await getClipsByTag(search);
+        res = await searchUsers(searchParams.get('q') || search);
+    else if (selectedSearchType === 'Trick Tags') {
+        res = await getClipsByTag(searchParams.get('q') || search);
     }
     setResults(res);
     console.log(res);

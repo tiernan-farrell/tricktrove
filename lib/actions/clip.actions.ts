@@ -22,6 +22,12 @@ interface AddCommentProps {
   videoUrl?: string;
 }
 
+interface AddLikeToClipProps { 
+  clipId: string;
+  userId: string;
+  path: string; 
+}
+
 export async function CreateClip({
   public_id,
   caption,
@@ -37,7 +43,8 @@ export async function CreateClip({
       { id: communityId },
       { _id: 1 },
     );
-
+    
+    const likes: Array<typeof User> = [];
     const createdClip = await Clip.create({
       public_id,
       caption,
@@ -45,6 +52,7 @@ export async function CreateClip({
       community: communityIdObject,
       createdAt: Date.now(),
       tags,
+      likes,
     });
 
     await User.findByIdAndUpdate(author, {
@@ -172,5 +180,60 @@ export async function getClipsByTag(tag: string) {
     return clips;
   } catch (err: any) {
     throw new Error(`GetClipsByTag: ${err.message}`);
+  }
+}
+
+
+export async function addLikeToClip({
+  clipId, 
+  userId,
+  path,
+}: AddLikeToClipProps) { 
+
+  try { 
+    connectToDB();
+
+    const clip = await Clip.findById(clipId);
+    const user = await User.findById(userId);
+    if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
+    if(!user) throw new Error(`Cannot find user with id ${userId}`);
+
+
+    user.likes.push(clip);
+    clip.likes.push(user);
+    await user.save();
+    await clip.save();
+
+
+  } catch (err: any) { 
+    throw new Error(`AddLikeToClip: ${err.message}`);
+  }
+
+  
+
+}
+
+export async function removeLikeFromClip({
+  clipId, 
+  userId,
+  path,
+}: AddLikeToClipProps) { 
+
+  try { 
+    connectToDB();
+
+    const clip = await Clip.findById(clipId);
+    const user = await User.findById(userId);
+    if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
+    if(!user) throw new Error(`Cannot find user with id ${userId}`);
+    
+    
+    user.likes.pop(clip);
+    clip.likes.pop(user);
+    await clip.save();
+    await user.save();
+
+  } catch (err: any) { 
+    throw new Error(`AddLikeToClip: ${err.message}`);
   }
 }

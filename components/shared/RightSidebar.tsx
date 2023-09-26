@@ -9,10 +9,13 @@ async function RightSidebar() {
   const user = await currentUser();
   if (!user) return null;
 
+  const start = Date.now();
   const similarMinds = await fetchUsers({
     userId: user.id,
     pageSize: 4,
   });
+  const end = Date.now();
+  console.log(`Execution time: ${end - start} ms`);
 
   const suggestedCOmmunities = await fetchCommunities({ pageSize: 4 });
 
@@ -59,12 +62,12 @@ async function RightSidebar() {
                   username={person.username}
                   imgUrl={person.image}
                   bio={person.bio}
-                  personType='User'
+                  personType="User"
                 />
               ))}
             </>
           ) : (
-            <p className='!text-base-regular text-light-3'>No users yet</p>
+            <p className="!text-base-regular text-light-3">No users yet</p>
           )}
         </div>
       </div>

@@ -1,19 +1,16 @@
-
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import UserCard from "@/components/cards/UserCard";
 import Searchbar from "@/components/shared/SearchBar";
 
-
 const Page = async () => {
   const user = await currentUser();
   if (!user) return null;
 
-
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
-
+  const start = Date.now();
   // fetch users
   const result = await fetchUsers({
     userId: user.id,
@@ -22,6 +19,9 @@ const Page = async () => {
     pageSize: 25,
     sortBy: -1,
   });
+
+  const end = Date.now();
+  console.log(`Execution time: ${end - start} ms`);
 
   return (
     <section className="relative px-6 py-7 mt-28">

@@ -23,6 +23,12 @@ const clipSchema = new mongoose.Schema({
     },
   ],
   tags: [String],
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ]
 });
 
 const Clip = mongoose.models.Clip || mongoose.model("Clip", clipSchema);

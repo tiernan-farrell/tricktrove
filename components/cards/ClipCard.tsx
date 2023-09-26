@@ -5,6 +5,7 @@ import React from "react";
 import VideoAutoPlay from "../shared/VideoAutoPlay";
 import VideoPlayer from "../shared/VideoPlayer";
 import TagCard from "../shared/TagCard";
+import LikeButton from "../shared/LikeButton";
 
 interface ClipCardProps {
   id: string;
@@ -123,14 +124,8 @@ const ClipCard = ({
               )}
 
               <div className="mt-5 flex flex-col gap-3">
-                <div className="flex gap-3.5">
-                  <Image
-                    src="/assets/heart-gray.svg"
-                    alt="heart"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                <div className="flex items-center gap-3.5">
+                <LikeButton clipId={id} userId={currentUserId} />
                   <Link href={`/clip/${id}`}>
                     <Image
                       src="/assets/reply.svg"

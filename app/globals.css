@@ -69,16 +69,16 @@
     @apply hover:bg-primary-500;
   }
   .topbar {
-    @apply fixed top-0 z-40 flex w-full items-center bg-dark-2 py-3 justify-between;
+    @apply fixed items-center top-0 z-40  w-full flex bg-dark-2 py-3 justify-between;
   }
   .logo-lettering { 
-    @apply flex self-center place-self-center ;
+    @apply  place-self-center object-center flex items-center justify-center grow;
   }
   .org { 
-    @apply flex;
+    @apply flex w-48;
   }
   .top-bar-signout { 
-    @apply flex;
+    @apply flex w-48 justify-end;
   }
   .bottombar {
     @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;

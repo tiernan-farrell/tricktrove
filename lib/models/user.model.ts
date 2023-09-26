@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
       ref: "Community",
     },
   ],
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Clip",
+    },
+  ]
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
