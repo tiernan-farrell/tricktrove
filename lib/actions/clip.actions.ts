@@ -4,6 +4,7 @@ import Clip from "../models/clip.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 import Community from "../models/community.model";
+import { fetchUser } from "./user.actions";
 
 interface ClipProps {
   public_id: string;
@@ -192,17 +193,30 @@ export async function addLikeToClip({
 
   try { 
     connectToDB();
+    console.log(196);   
+    const user = await fetchUser(userId)
+    console.log(198);
+    // TODO: FIX THIS LINE ERROR HERE
+    await Clip.findByIdAndUpdate(clipId, {
+      $push: { likes: userId }, 
+    });
+    
+    console.log(203);
+    await User.findByIdAndUpdate(user, {
+      $push: { likes: clipId },
+    });
+    console.log(207);
 
-    const clip = await Clip.findById(clipId);
-    const user = await User.findById(userId);
-    if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
-    if(!user) throw new Error(`Cannot find user with id ${userId}`);
+    // const clip = await Clip.findById(clipId);
+    // const user = await User.findById(userId);
+    // if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
+    // if(!user) throw new Error(`Cannot find user with id ${userId}`);
 
 
-    user.likes.push(clip);
-    clip.likes.push(user);
-    await user.save();
-    await clip.save();
+    // user.likes.push(clip);
+    // clip.likes.push(user);
+    // await user.save();
+    // await clip.save();
 
 
   } catch (err: any) { 
@@ -222,18 +236,43 @@ export async function removeLikeFromClip({
   try { 
     connectToDB();
 
-    const clip = await Clip.findById(clipId);
-    const user = await User.findById(userId);
-    if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
-    if(!user) throw new Error(`Cannot find user with id ${userId}`);
+    await Clip.findByIdAndUpdate(clipId, {
+      $pop: { likes: userId },
+    });
+
+    await User.findByIdAndUpdate(userId, {
+      $pop: { likes: clipId },
+    });
+
+    // const clip = await Clip.findById(clipId);
+    // const user = await User.findById(userId);
+    // if(!clip) throw new Error(`Cannot find clip with id ${clipId}`);
+    // if(!user) throw new Error(`Cannot find user with id ${userId}`);
     
-    
-    user.likes.pop(clip);
-    clip.likes.pop(user);
-    await clip.save();
-    await user.save();
+    // console.log('hello')
+    // user.likes.pop(clip);
+    // clip.likes.pop(user);
+    // await clip.save();
+    // await user.save();
 
   } catch (err: any) { 
-    throw new Error(`AddLikeToClip: ${err.message}`);
+    throw new Error(`RemoveLikeFromClip: ${err.message}`);
+  }
+}
+
+export async function getUsersWhoLikedClip(clipId: string) {
+  try {
+    const clip = await Clip.findById(clipId);
+    if (!clip) {
+      throw new Error("Clip not found");
+    }
+
+    // Find the users who have liked the clip
+    const users = await User.find({ _id: { $in: clip.likes } });
+
+    return users;
+  } catch (err: any) {
+    console.error("Error getting users who liked clip: ", err);
+    throw new Error(`Error getting users who liked clip ${err.message}`);
   }
 }

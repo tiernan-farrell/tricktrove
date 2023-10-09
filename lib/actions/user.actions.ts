@@ -57,6 +57,8 @@ export async function updateUser({
   }
 }
 
+
+
 export async function fetchUser(userId: string) {
   try {
     console.log("Conntecting to DB from: fetch User");
@@ -104,6 +106,19 @@ export async function fetchUserPosts(userId: string) {
     throw new Error(`Error while fetching users posts ${err.message}`);
   }
 }
+
+export async function fetchUserByUserName(userName:string) {
+  try {   
+    connectToDB();
+    const user = await User.findOne({ username: userName });
+    console.log(user);
+    return user;
+
+  } catch (err: any) {
+    throw new Error(`Error while fetching users posts ${err.message}`);
+  } 
+}
+
 
 export async function fetchUsers({
   userId,
@@ -205,9 +220,24 @@ export async function searchUsers(searchString: string) {
     const userQuery = User.find(query);
 
     const users = await userQuery.exec();
-
     return users;
   } catch (err: any) {
     throw new Error(`SearchUsers: ${err.message}`);
+  }
+}
+export async function getLikedClips(userId: string) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Find the clips that the user has liked
+    const likedClips = await Clip.find({ _id: { $in: user.likes } });
+
+    return likedClips;
+  } catch (err: any) {
+    console.error("Error getting liked clips: ", err);
+    throw new Error(`Error getting liked clips ${err.message}`);
   }
 }

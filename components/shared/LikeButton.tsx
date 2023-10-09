@@ -22,7 +22,7 @@ const LikeButton = ({userId, clipId}: LikeButtonProps) => {
 
   const updateLike = async() => { 
     setIsLiked(!isLiked);
-    isLiked ? await addLikeToClip({userId, clipId, path}) : await removeLikeFromClip({userId, clipId, path})
+    isLiked ? await removeLikeFromClip({userId, clipId, path}) : await addLikeToClip({userId, clipId, path})
   }
   
   return (
